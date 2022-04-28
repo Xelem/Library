@@ -5,7 +5,7 @@ const bookSchema = new mongoose.Schema({
     type: String,
     required: [true, "A book must have a title"],
     unique: true,
-    maxlength: [20, "The title of a book must not be more than 20 characters"],
+    maxlength: [20, "The title of a book must not be more than 40 characters"],
     minlength: [3, "The title of a book must not be less than 3 characters"],
   },
   author: {
@@ -22,8 +22,20 @@ const bookSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ["Librarian", "Regular"],
-    default: "Regular",
+    enum: ["Drama", "Prose", "Poetry"],
+  },
+  price: {
+    type: Number,
+    required: [true, "A book must have a price"],
+  },
+  imageCover: {
+    type: String,
+    required: [true, "A book must have an image cover"],
+  },
+  registeredAt: {
+    type: Date,
+    default: Date.now(),
+    select: false,
   },
 });
 
