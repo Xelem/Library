@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
     required: [true, "Please input your name"],
     unique: true,
     maxlength: [20, "Your name must not be more than 25 characters"],
-    minlength: [3, "Your name must not be less than 5 characters"],
+    minlength: [5, "Your name must not be less than 5 characters"],
   },
   email: {
     type: String,
@@ -32,8 +32,9 @@ const userSchema = new mongoose.Schema({
   passwordConfirm: {
     type: String,
     required: [true, "Please confirm your password"],
+    select: false,
     validate: {
-      validiator: function (el) {
+      validator: function (el) {
         return el === this.password;
       },
       message: "Passwords are not the same",
