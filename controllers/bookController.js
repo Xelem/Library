@@ -5,7 +5,7 @@ const factory = require("./handlerFactory");
 
 exports.registerBook = factory.createNew(Book);
 exports.getAllBooks = factory.getAll(Book);
-exports.getOneBook = factory.getOne(Book);
+exports.getOneBook = factory.getOne(Book, { path: "reviews" });
 exports.deleteBook = factory.deleteOne(Book);
 
 exports.updateBook = catchAsync(async (req, res, next) => {
