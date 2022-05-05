@@ -1,4 +1,4 @@
-const nodemailer = require("nodemailer");
+const nodemailer = require('nodemailer');
 
 const sendMail = async (user, url) => {
   // CREATE transport
@@ -15,7 +15,7 @@ const sendMail = async (user, url) => {
   const mailOptions = {
     from: process.env.EMAIL_FROM,
     to: user.email,
-    subject: "Password Reset ",
+    subject: 'Password Reset ',
     text: `Your password reset token (Valid for only 10 minutes) ${url}`,
   };
 

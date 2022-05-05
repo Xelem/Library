@@ -1,53 +1,54 @@
-const mongoose = require("mongoose");
-const validator = require("validator");
-const bcrypt = require("bcrypt");
-const crypto = require("crypto");
+const mongoose = require('mongoose');
+const validator = require('validator');
+const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, "Please input your name"],
+    required: [true, 'Please input your name'],
     unique: true,
-    maxlength: [20, "Your name must not be more than 25 characters"],
-    minlength: [5, "Your name must not be less than 5 characters"],
+    maxlength: [20, 'Your name must not be more than 25 characters'],
+    minlength: [5, 'Your name must not be less than 5 characters'],
   },
   email: {
     type: String,
-    required: [true, "Please input your email"],
+    required: [true, 'Please input your email'],
     unique: true,
     lowercase: true,
-    validate: [validator.isEmail, "Please input a valid email address"],
+    validate: [validator.isEmail, 'Please input a valid email address'],
   },
   photo: String,
   role: {
     type: String,
-    enum: ["admin", "user"],
-    default: "user",
+    enum: ['admin', 'user'],
+    default: 'user',
   },
   password: {
     type: String,
-    required: [true, "Please input your password"],
+    required: [true, 'Please input your password'],
     trim: true,
-    minlength: [8, "Password must be more than or equal to 8 characters"],
+    minlength: [8, 'Password must be more than or equal to 8 characters'],
     select: false,
   },
   passwordConfirm: {
     type: String,
-    required: [true, "Please confirm your password"],
+    select: false,
+    required: [true, 'Please confirm your password'],
     validate: {
       validator: function (el) {
         return el === this.password;
       },
-      message: "Passwords are not the same",
+      message: 'Passwords are not the same',
     },
   },
   passwordResetToken: String,
   passwordResetExpires: Date,
 });
 
-userSchema.pre("save", async function (next) {
+userSchema.pre('save', async function (next) {
   // ONLY run this function if the password was actually modified
-  if (!this.isModified("password")) return next();
+  if (!this.isModified('password')) return next();
 
   // HASH password with cost of 12
   this.password = await bcrypt.hash(this.password, 12);
@@ -57,8 +58,8 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-userSchema.pre("save", function (next) {
-  if (!this.isModified("password") || this.isNew) return next();
+userSchema.pre('save', function (next) {
+  if (!this.isModified('password') || this.isNew) return next();
 
   this.passwordChangedAt = Date.now() - 1000;
   next();
@@ -72,15 +73,15 @@ userSchema.methods.correctPassword = async function (
 };
 
 userSchema.methods.createPasswordResetToken = function () {
-  const resetToken = crypto.randomBytes(32).toString("hex");
+  const resetToken = crypto.randomBytes(32).toString('hex');
 
   this.passwordResetToken = crypto
-    .createHash("sha256")
+    .createHash('sha256')
     .update(resetToken)
-    .digest("hex");
+    .digest('hex');
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
   return resetToken;
 };
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model('User', userSchema);
 module.exports = User;

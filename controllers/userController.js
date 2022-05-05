@@ -1,14 +1,7 @@
-const User = require("../models/userModel");
-const AppError = require("../utils/appError");
-const catchAsync = require("../utils/catchAsync");
-const handlerFactory = require("./handlerFactory");
-
-exports.createUser = (req, res) => {
-  res.status(500).json({
-    status: "error",
-    message: "This route has not been defined",
-  });
-};
+const User = require('../models/userModel');
+const AppError = require('../utils/appError');
+const catchAsync = require('../utils/catchAsync');
+const handlerFactory = require('./handlerFactory');
 
 exports.getAllUsers = handlerFactory.getAll(User);
 exports.getOneUser = handlerFactory.getOne(User);
@@ -19,7 +12,7 @@ exports.getMe = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user._id);
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: user,
   });
 });
@@ -37,14 +30,14 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   if (req.body.password || req.body.passwordConfirm) {
     return next(
       new AppError(
-        "This route is not for password updates. Please use /updateMyPassword.",
+        'This route is not for password updates. Please use /updateMyPassword.',
         400
       )
     );
   }
 
   // Filtered out unwanted field names that are not allowed to be updated
-  const filteredBody = filterObj(req.body, "name", "email");
+  const filteredBody = filterObj(req.body, 'name', 'email');
   if (req.file) filteredBody.photo = req.file.filename;
 
   // 2) Update User document
@@ -54,7 +47,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     runValidators: true,
   });
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: {
       user: updatedUser,
     },
