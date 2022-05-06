@@ -1,15 +1,26 @@
 const nodemailer = require('nodemailer');
 
-const sendMail = async (user, url) => {
+const sendEmail = async (user, url) => {
   // CREATE transport
-  const newTransport = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
-    auth: {
-      user: process.env.EMAIL_USERNAME,
-      pass: process.env.EMAIL_PASSWORD,
-    },
-  });
+  let newTransport;
+  if (process.env.NODE_ENV === 'production') {
+    newTransport = nodemailer.createTransport({
+      service: 'SendGrid',
+      auth: {
+        api_user: process.env.SENDGRID_USERNAME,
+        api_key: process.env.SENDGRID_PASSWORD,
+      },
+    });
+  } else {
+    newTransport = nodemailer.createTransport({
+      host: process.env.EMAIL_HOST,
+      port: process.env.EMAIL_PORT,
+      auth: {
+        user: process.env.EMAIL_USERNAME,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
+  }
 
   // Mail Options
   const mailOptions = {
@@ -23,4 +34,4 @@ const sendMail = async (user, url) => {
   await newTransport.sendMail(mailOptions);
 };
 
-module.exports = sendMail;
+module.exports = sendEmail;
