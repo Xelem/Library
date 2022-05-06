@@ -4,14 +4,13 @@ const sendEmail = async (user, url) => {
   // CREATE transport
   let newTransport;
   if (process.env.NODE_ENV === 'production') {
-    newTransport = nodemailer.createTransport({
-      service: 'SendGrid',
-      auth: {
-        api_user: process.env.SENDGRID_USERNAME,
-        api_key: process.env.SENDGRID_PASSWORD,
-      },
-    });
-  } else {
+    //   newTransport = nodemailer.createTransport({
+    //     service: 'SendGrid',
+    //     auth: {
+    //       api_user: process.env.SENDGRID_USERNAME,
+    //       api_key: process.env.SENDGRID_PASSWORD,
+    //     },
+    //   });
     newTransport = nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
       port: process.env.EMAIL_PORT,
@@ -20,6 +19,22 @@ const sendEmail = async (user, url) => {
         pass: process.env.EMAIL_PASSWORD,
       },
     });
+  } else {
+    newTransport = nodemailer.createTransport({
+      service: 'SendGrid',
+      auth: {
+        api_user: process.env.SENDGRID_USERNAME,
+        api_key: process.env.SENDGRID_PASSWORD,
+      },
+    });
+    // newTransport = nodemailer.createTransport({
+    //   host: process.env.EMAIL_HOST,
+    //   port: process.env.EMAIL_PORT,
+    //   auth: {
+    //     user: process.env.EMAIL_USERNAME,
+    //     pass: process.env.EMAIL_PASSWORD,
+    //   },
+    // });
   }
 
   // Mail Options
