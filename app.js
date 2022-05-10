@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const compression = require('compression');
@@ -9,9 +10,14 @@ const cors = require('cors');
 const bookRouter = require('./routes/bookRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
+const viewRouter = require('./routes/viewRoutes');
 
 // START EXPRESS APP
 const app = express();
+
+// CONNECT FRONTEND
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
 
 // Implement CORS
 app.use(cors());
@@ -47,6 +53,7 @@ app.use(mongoSanitize());
 app.use(xss());
 
 // ROUTES
+app.use('/', viewRouter);
 app.use('/api/v1/books/', bookRouter);
 app.use('/api/v1/users/', userRouter);
 app.use('/api/v1/reviews/', reviewRouter);
